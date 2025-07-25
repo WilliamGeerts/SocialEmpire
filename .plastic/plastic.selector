@@ -1,0 +1,4 @@
+repository "Clash of Pietroll/Clash of Pietroll@9072293781647@cloud"
+  path "/"
+    br "/main"
+    co "/main"
