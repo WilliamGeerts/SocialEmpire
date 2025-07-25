@@ -19,7 +19,7 @@ public class GameController : MonoBehaviour
 
             if (data != null && data.prefab != null)
             {
-                Vector3 finalPos = buildingPlacer.groundTilemap.GetCellCenterWorld(placed.cellPosition);
+                Vector3 finalPos = buildingPlacer.floor.GetCellCenterWorld(placed.cellPosition);
                 finalPos.z = 0f;
 
                 GameObject building = Instantiate(data.prefab, finalPos, Quaternion.identity);

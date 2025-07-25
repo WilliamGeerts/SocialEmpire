@@ -3,7 +3,7 @@ using UnityEngine.UI;
 using TMPro;
 using System.Collections.Generic;
 
-public class Shop : MonoBehaviour
+public class ShopController : MonoBehaviour
 {
     public GameObject shopPanel;
     public GameObject buttonPrefab;

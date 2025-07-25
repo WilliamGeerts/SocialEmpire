@@ -10,13 +10,14 @@ public class BuildingPlacer : MonoBehaviour
 
     [Header("Grille et Tilemaps")]
     public Grid grid;
-    public Tilemap groundTilemap;
+    public Tilemap floor;
 
     [Header("UI")]
-    public CameraController cameraDragScript;
+    public CameraController cameraController;
+    public ShopController shopController;
 
     [Header("Indicators")]
-    public GameObject tileIndicatorPrefab;
+    public GameObject tileIndicator;
 
     private GameObject currentGhost;
     private BuildingData currentBuildingData;
@@ -35,7 +36,7 @@ public class BuildingPlacer : MonoBehaviour
         {
             Vector2Int size = currentBuildingData.size;
 
-            Vector3Int originCell = groundTilemap.WorldToCell(currentGhost.transform.position);
+            Vector3Int originCell = floor.WorldToCell(currentGhost.transform.position);
 
             Vector3Int centerCell = new Vector3Int(
                 originCell.x + (size.x - 1) / 2,
@@ -62,6 +63,8 @@ public class BuildingPlacer : MonoBehaviour
 
     public void StartPlacingBuilding(BuildingData data)
     {
+        shopController.ToggleShop();
+
         if (currentGhost != null)
         {
             Debug.LogWarning("[StartPlacingBuilding] État invalide : placement annulé.");
@@ -78,7 +81,7 @@ public class BuildingPlacer : MonoBehaviour
         screenCenterWorld.z = 0;
 
         // Convertir la position en cellule
-        Vector3Int centerCell = groundTilemap.WorldToCell(screenCenterWorld);
+        Vector3Int centerCell = floor.WorldToCell(screenCenterWorld);
         Debug.LogWarning($"[StartPlacingBuilding] Cellule au centre: {centerCell}.");
 
         Vector2Int size = currentBuildingData.size;
@@ -89,7 +92,7 @@ public class BuildingPlacer : MonoBehaviour
         );
 
         // Convertir la cellule en position
-        Vector3 originCellWorldPos = groundTilemap.GetCellCenterWorld(originCell);
+        Vector3 originCellWorldPos = floor.GetCellCenterWorld(originCell);
 
         currentGhost = Instantiate(data.prefab, originCellWorldPos, Quaternion.identity);
         Debug.LogWarning($"[StartPlacingBuilding] Position initial du batiment: {originCellWorldPos}.");
@@ -97,8 +100,8 @@ public class BuildingPlacer : MonoBehaviour
         SetGhostVisual(currentGhost, true);
         isPlacing = true;
 
-        if (cameraDragScript != null)
-            cameraDragScript.enabled = false;
+        if (cameraController != null)
+            cameraController.enabled = false;
 
         // Les indicateurs sont alignés sur la cellule d'origine (coin bas gauche)
         GeneratePlacementIndicators(centerCell);
@@ -112,7 +115,7 @@ public class BuildingPlacer : MonoBehaviour
             return;
         }
 
-        Vector3Int centerCell = groundTilemap.WorldToCell(currentGhost.transform.position);
+        Vector3Int centerCell = floor.WorldToCell(currentGhost.transform.position);
 
         Vector2Int size = currentBuildingData.size;
 
@@ -165,9 +168,9 @@ public class BuildingPlacer : MonoBehaviour
         currentBuildingData = null;
         isPlacing = false;
 
-        if (cameraDragScript != null)
+        if (cameraController != null)
         {
-            cameraDragScript.enabled = true;
+            cameraController.enabled = true;
         }
     }
 
@@ -242,9 +245,9 @@ public class BuildingPlacer : MonoBehaviour
                     originCell.y + y, 
                     originCell.z
                 );
-                Vector3 worldPos = groundTilemap.GetCellCenterWorld(cellPos);
+                Vector3 worldPos = floor.GetCellCenterWorld(cellPos);
 
-                GameObject indicator = Instantiate(tileIndicatorPrefab, worldPos, Quaternion.Euler(63f, 0f, 0f));
+                GameObject indicator = Instantiate(tileIndicator, worldPos, Quaternion.Euler(63f, 0f, 0f));
 
                 bool isValid = IsCellValid(cellPos);
                 var renderer = indicator.GetComponent<SpriteRenderer>();
@@ -269,7 +272,7 @@ public class BuildingPlacer : MonoBehaviour
         }
 
         // Si la cellule n'est pas de type "Floor"
-        if (!groundTilemap.HasTile(cell)) 
+        if (!floor.HasTile(cell)) 
         {
             return false;
         }
@@ -310,6 +313,6 @@ public class BuildingPlacer : MonoBehaviour
     {
         GameObject[] placedBuildings = GameObject.FindGameObjectsWithTag("Building");
         List<GameObject> buildingList = new List<GameObject>(placedBuildings);
-        SavedController.Save(buildingList, groundTilemap);
+        SavedController.Save(buildingList, floor);
     }
 }
