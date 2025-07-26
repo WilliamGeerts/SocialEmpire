@@ -256,9 +256,9 @@ MonoBehaviour:
   buildingName: Food House
   cellPosition: {x: 0, y: 0, z: 0}
   data:
-    name: 
+    name: Food House
     prefab: {fileID: 0}
-    size: {x: 1, y: 1}
+    size: {x: 2, y: 2}
   lastValidCell: {x: 0, y: 0, z: 0}
 --- !u!114 &2528068532543830576
 MonoBehaviour:
@@ -323,7 +323,7 @@ PolygonCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.115}
-    oldSize: {x: 2.0425532, y: 2.1617022}
+    oldSize: {x: 2.4, y: 2.54}
     newSize: {x: 2, y: 2.245098}
     adaptiveTilingThreshold: 0.5
     drawMode: 0

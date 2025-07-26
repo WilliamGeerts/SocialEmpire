@@ -120,7 +120,7 @@ MonoBehaviour:
   buildingName: Wall
   cellPosition: {x: 0, y: 0, z: 0}
   data:
-    name: 
+    name: Wall
     prefab: {fileID: 0}
     size: {x: 1, y: 1}
   lastValidCell: {x: 0, y: 0, z: 0}

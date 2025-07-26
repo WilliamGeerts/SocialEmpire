@@ -68,7 +68,7 @@ public class BuildingPlacer : MonoBehaviour
         {
             CancelPlacement();
         }
-        
+
         shopController.ToggleShop();
 
         if (currentGhost != null)
@@ -280,9 +280,10 @@ public class BuildingPlacer : MonoBehaviour
         ClearIndicators();
 
         Vector2Int size = currentBuildingData.size;
+
         Vector3Int originCell = new Vector3Int(
-            centerCell.x - (size.x - 1) / 2, 
-            centerCell.y - (size.y - 1) / 2, 
+            centerCell.x - (size.x - 1) / 2,
+            centerCell.y - (size.y - 1) / 2,
             centerCell.z
         );
 
@@ -293,20 +294,26 @@ public class BuildingPlacer : MonoBehaviour
             {
                 Vector3Int cellPos = new Vector3Int(
                     originCell.x + x,
-                    originCell.y + y, 
+                    originCell.y + y,
                     originCell.z
                 );
+
                 Vector3 worldPos = floor.GetCellCenterWorld(cellPos);
 
                 GameObject indicator = Instantiate(tileIndicator, worldPos, Quaternion.Euler(63f, 0f, 0f));
 
                 bool isValid = IsCellValid(cellPos);
+
                 var renderer = indicator.GetComponent<SpriteRenderer>();
                 if (renderer != null)
                 {
                     Color color = isValid ? Color.green : Color.red;
                     color.a = 0.5f;
                     renderer.color = color;
+                }
+                else
+                {
+                    Debug.LogWarning($"[GeneratePlacementIndicators] Aucun SpriteRenderer trouvé sur l'indicateur {indicator.name}");
                 }
 
                 currentIndicators.Add(indicator);

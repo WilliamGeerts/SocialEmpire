@@ -256,9 +256,9 @@ MonoBehaviour:
   buildingName: Castle
   cellPosition: {x: 0, y: 0, z: 0}
   data:
-    name: 
+    name: Castle
     prefab: {fileID: 0}
-    size: {x: 1, y: 1}
+    size: {x: 5, y: 5}
   lastValidCell: {x: 0, y: 0, z: 0}
 --- !u!114 &2528068532543830576
 MonoBehaviour:
@@ -322,8 +322,8 @@ PolygonCollider2D:
   m_Offset: {x: 0, y: 0}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 10.73, y: 9.88}
+    pivot: {x: 0.5, y: 0.05}
+    oldSize: {x: 5.419192, y: 4.989899}
     newSize: {x: 5, y: 4.810845}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
