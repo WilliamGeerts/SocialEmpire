@@ -63,6 +63,12 @@ public class BuildingPlacer : MonoBehaviour
 
     public void StartPlacingBuilding(BuildingData data)
     {
+        // Annuler le bâtiment précédent s'il est encore en fantôme
+        if (isPlacing && currentGhost != null)
+        {
+            CancelPlacement();
+        }
+        
         shopController.ToggleShop();
 
         if (currentGhost != null)
@@ -197,8 +203,9 @@ public class BuildingPlacer : MonoBehaviour
         if (renderer != null)
         {
             Color color = renderer.color;
-            color.a = ghostMode ? 0.5f : 1f;
+            color.a = ghostMode ? 0.65f : 1f;
             renderer.color = color;
+            renderer.sortingLayerName = ghostMode ? "BuildingGhost" : "Building";
         }
         else
         {
@@ -233,6 +240,12 @@ public class BuildingPlacer : MonoBehaviour
 
     public void EnterPlacementModeFor(GameObject building)
     {
+        // Si un autre bâtiment est déjà en mode fantôme, annule-le
+        if (isPlacing && currentGhost != null && currentGhost != building)
+        {
+            CancelPlacement();
+        }
+
         currentGhost = building;
         currentBuildingData = building.GetComponent<BuildingInstance>().data;
         isPlacing = true;
@@ -243,7 +256,7 @@ public class BuildingPlacer : MonoBehaviour
         // Libérer les anciennes cellules
         UnregisterBuildingCells(instance.cellPosition, instance.data.size);
 
-        // Génère les indicateurs sous le bâtiment
+        // Générer les indicateurs sous le bâtiment
         Vector3Int centerCell = floor.WorldToCell(building.transform.position);
         GeneratePlacementIndicators(centerCell);
     }

@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 354ee81263f5e2a42a5feacf06f8e93d
+guid: b41b3dca722205d46ae0091c652503ae
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -1680131537435045546
-    second: House (2)_0
+      213: -4500205064048270988
+    second: ChatGPT Image 26 juil. 2025, 23_39_30 (1)_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -51,7 +51,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 180
+  spritePixelsToUnits: 320
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -113,13 +113,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: House (2)_0
+      name: ChatGPT Image 26 juil. 2025, 23_39_30 (1)_0
       rect:
         serializedVersion: 2
-        x: 4
-        y: 6
-        width: 408
-        height: 458
+        x: 6
+        y: 2
+        width: 731
+        height: 739
       alignment: 9
       pivot: {x: 0.5, y: 0.115}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -128,8 +128,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 651d047b449fea8e0800000000000000
-      internalID: -1680131537435045546
+      spriteID: 4712dfc565f0c81c0800000000000000
+      internalID: -4500205064048270988
       vertices: []
       indices: 
       edges: []
@@ -138,7 +138,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: ab0bb66842c22fd459e151c86f8f10c0
+    spriteID: b3d137926df8fb148b54072dca73d7dd
     internalID: 0
     vertices: []
     indices: 
@@ -148,7 +148,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      House (2)_0: -1680131537435045546
+      ChatGPT Image 26 juil. 2025, 23_39_30 (1)_0: -4500205064048270988
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

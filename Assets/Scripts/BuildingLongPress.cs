@@ -20,9 +20,10 @@ public class BuildingLongPress : MonoBehaviour
         dragToGrid = GetComponent<DragToGrid>();
         buildingPlacer = FindObjectOfType<BuildingPlacer>();
 
+        // Désactiver DragToGrid par défaut
         if (dragToGrid != null)
         {
-            dragToGrid.enabled = false;  // Désactiver DragToGrid par défaut
+            dragToGrid.enabled = false;
         }
         else
         {
@@ -62,7 +63,7 @@ public class BuildingLongPress : MonoBehaviour
             if (pressTime >= holdDuration)
             {
                 ActivateDragAndGhost();
-                pressStarted = false;  // Évite le déclenchement multiple
+                pressStarted = false;
             }
         }
 

@@ -49,6 +49,9 @@ TagManager:
   - name: Building
     uniqueID: 3312124461
     locked: 0
+  - name: BuildingGhost
+    uniqueID: 2427701729
+    locked: 0
   - name: BuildingUI
     uniqueID: 576447693
     locked: 0

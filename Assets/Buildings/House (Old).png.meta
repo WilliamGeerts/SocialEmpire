@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: f29a38e89cabf364aa01ec79f311eca4
+guid: 354ee81263f5e2a42a5feacf06f8e93d
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -7902689708659703536
-    second: CastleNet_0
+      213: -1680131537435045546
+    second: House (2)_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -51,7 +51,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 198
+  spritePixelsToUnits: 180
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -113,23 +113,23 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: CastleNet_0
+      name: House (2)_0
       rect:
         serializedVersion: 2
-        x: 3
-        y: 72
-        width: 1073
-        height: 988
+        x: 4
+        y: 6
+        width: 408
+        height: 458
       alignment: 9
-      pivot: {x: 0.5, y: 0.05}
+      pivot: {x: 0.5, y: 0.115}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 01104398491045290800000000000000
-      internalID: -7902689708659703536
+      spriteID: 651d047b449fea8e0800000000000000
+      internalID: -1680131537435045546
       vertices: []
       indices: 
       edges: []
@@ -138,7 +138,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 326bdad9d9adfdf47983f29a2657783a
+    spriteID: ab0bb66842c22fd459e151c86f8f10c0
     internalID: 0
     vertices: []
     indices: 
@@ -148,7 +148,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      CastleNet_0: -7902689708659703536
+      House (2)_0: -1680131537435045546
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
