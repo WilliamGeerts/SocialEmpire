@@ -22,6 +22,7 @@ public class BuildingPlacer : MonoBehaviour
     private BuildingData currentBuildingData;
     private bool isPlacing = false;
     private Vector3Int lastCell = Vector3Int.zero;
+    private Vector3Int initialCellPosition;
 
     // Liste des cases d'indications (placement)
     private List<GameObject> currentIndicators = new();
@@ -112,7 +113,6 @@ public class BuildingPlacer : MonoBehaviour
         }
 
         Vector3Int centerCell = floor.WorldToCell(currentGhost.transform.position);
-
         Vector2Int size = currentBuildingData.size;
 
         for (int x = 0; x < size.x; x++)
@@ -120,9 +120,9 @@ public class BuildingPlacer : MonoBehaviour
             for (int y = 0; y < size.y; y++)
             {
                 Vector3Int checkCell = new Vector3Int(centerCell.x + x, centerCell.y + y, centerCell.z);
-
                 if (!IsCellValid(checkCell))
                 {
+                    Debug.LogWarning("[ValidatePlacement] Placement invalide (cellule bloquée)");
                     return;
                 }
             }
@@ -135,20 +135,45 @@ public class BuildingPlacer : MonoBehaviour
         if (buildingInstance != null)
         {
             buildingInstance.cellPosition = centerCell;
+            buildingInstance.SaveCurrentPosition();
+            RegisterBuildingCells(centerCell, currentBuildingData.size); // Réenregistrement ici
         }
         else
         {
             Debug.LogWarning("[ValidatePlacement] Aucun composant BuildingInstance trouvé sur le bâtiment");
         }
 
-        RegisterBuildingCells(centerCell, size);
         SaveCurrentBuildings();
         EndPlacement(false);
     }
 
     public void CancelPlacement()
     {
-        EndPlacement();
+        if (currentGhost != null)
+        {
+            if (currentGhost.CompareTag("Building"))
+            {
+                var instance = currentGhost.GetComponent<BuildingInstance>();
+                if (instance != null)
+                {
+                    instance.cellPosition = initialCellPosition;
+                    currentGhost.transform.position = floor.GetCellCenterWorld(initialCellPosition);
+
+                    // Réenregistrer les anciennes cellules
+                    RegisterBuildingCells(initialCellPosition, instance.data.size);
+                    Debug.Log("[CancelPlacement] Anciennes cellules réenregistrées");
+                }
+
+                SetGhostVisual(currentGhost, false);
+            }
+            else
+            {
+                EndPlacement();
+                return;
+            }
+        }
+
+        EndPlacement(false);
     }
 
     private void EndPlacement(bool destroyGhost = true)
@@ -165,9 +190,8 @@ public class BuildingPlacer : MonoBehaviour
         isPlacing = false;
     }
 
-
     // Déterminer si le bâtiment est en mode fantôme (Placement)
-    private void SetGhostVisual(GameObject ghost, bool ghostMode)
+    public void SetGhostVisual(GameObject ghost, bool ghostMode)
     {
         SpriteRenderer renderer = ghost.GetComponent<SpriteRenderer>();
         if (renderer != null)
@@ -204,17 +228,40 @@ public class BuildingPlacer : MonoBehaviour
 
         // Toggle le script permettant de déplacer un bâtiment
         ghost.GetComponent<DragToGrid>().enabled = ghostMode;
+        ghost.GetComponent<BuildingLongPress>().enabled = !ghostMode;
+    }
+
+    public void EnterPlacementModeFor(GameObject building)
+    {
+        currentGhost = building;
+        currentBuildingData = building.GetComponent<BuildingInstance>().data;
+        isPlacing = true;
+
+        var instance = building.GetComponent<BuildingInstance>();
+        initialCellPosition = instance.cellPosition;
+
+        // Libérer les anciennes cellules
+        UnregisterBuildingCells(instance.cellPosition, instance.data.size);
+
+        // Génère les indicateurs sous le bâtiment
+        Vector3Int centerCell = floor.WorldToCell(building.transform.position);
+        GeneratePlacementIndicators(centerCell);
+    }
+
+    public void UnregisterBuildingCells(Vector3Int originCell, Vector2Int size)
+    {
+        for (int x = 0; x < size.x; x++)
+        {
+            for (int y = 0; y < size.y; y++)
+            {
+                Vector3Int cell = new Vector3Int(originCell.x + x, originCell.y + y, originCell.z);
+                occupiedCells.Remove(cell);
+            }
+        }
     }
 
     private void GeneratePlacementIndicators(Vector3Int centerCell)
     {
-        // Debug.LogWarning($"[GeneratePlacementIndicators] Test: {centerCell}");
-        
-        if (centerCell == lastCell && currentIndicators.Count > 0) 
-        {
-            return;
-        }
-
         lastCell = centerCell;
 
         ClearIndicators();
