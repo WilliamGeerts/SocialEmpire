@@ -1,9 +1,7 @@
 using UnityEngine;
 using System.Linq;
 
-/// <summary>
-/// Active le DragToGrid et le mode fantôme sur un bâtiment après un appui long (1s).
-/// </summary>
+/// Activer le DragToGrid et le mode fantôme sur un bâtiment après un appui long (1s).
 [RequireComponent(typeof(Collider2D))]
 public class BuildingLongPress : MonoBehaviour
 {
@@ -51,7 +49,6 @@ public class BuildingLongPress : MonoBehaviour
                 {
                     pressStarted = true;
                     pressTime = 0f;
-                    Debug.Log("[BuildingLongPress] Bâtiment sélectionné avec priorité de tri");
                 }
             }
         }
@@ -79,14 +76,12 @@ public class BuildingLongPress : MonoBehaviour
         if (dragToGrid != null)
         {
             dragToGrid.enabled = true;
-            Debug.Log("[LongPressToEnableDrag] DragToGrid activé après appui long !");
         }
 
         if (buildingPlacer != null)
         {
             buildingPlacer.SetGhostVisual(gameObject, true);
             buildingPlacer.EnterPlacementModeFor(gameObject);
-            Debug.Log("[LongPressToEnableDrag] Mode fantôme + indicateurs activés !");
         }
         else
         {

@@ -24,18 +24,18 @@ public class BuildingPlacer : MonoBehaviour
     private Vector3Int lastCell = Vector3Int.zero;
     private Vector3Int initialCellPosition;
 
-    // Liste des cases d'indications (placement)
-    private List<GameObject> currentIndicators = new();
+    // Indicateurs de placement
+    private readonly List<GameObject> currentIndicators = new();
 
-    // Liste des cases occupées
-    private HashSet<Vector3Int> occupiedCells = new();
+    // Cellules occupées
+    private readonly HashSet<Vector3Int> occupiedCells = new();
 
-    public void Update()
+    #region Unity Methods
+    private void Update()
     {
         if (isPlacing && currentGhost != null)
         {
             Vector2Int size = currentBuildingData.size;
-
             Vector3Int originCell = floor.WorldToCell(currentGhost.transform.position);
 
             Vector3Int centerCell = new Vector3Int(
@@ -47,7 +47,9 @@ public class BuildingPlacer : MonoBehaviour
             GeneratePlacementIndicators(centerCell);
         }
     }
+    #endregion
 
+    #region Placement Start / Cancel / Validate
     public void StartPlacingBuildingByName(string buildingName)
     {
         var data = availableBuildings.Find(b => b.name == buildingName);
@@ -57,7 +59,7 @@ public class BuildingPlacer : MonoBehaviour
         }
         else
         {
-            Debug.LogError($"[BuildingPlacer] Building '{buildingName}' not found in availableBuildings");
+            Debug.LogError($"[BuildingPlacer] Building '{buildingName}' not found.");
         }
     }
 
@@ -73,13 +75,11 @@ public class BuildingPlacer : MonoBehaviour
 
         if (currentGhost != null)
         {
-            Debug.LogWarning("[StartPlacingBuilding] État invalide : placement annulé.");
             Destroy(currentGhost);
         }
 
         // Nettoyer les anciennes cellules d'indication
         ClearIndicators();
-
         currentBuildingData = data;
 
         // Récupérer la position du centre de l'écran
@@ -88,7 +88,6 @@ public class BuildingPlacer : MonoBehaviour
 
         // Convertir la position en cellule
         Vector3Int centerCell = floor.WorldToCell(screenCenterWorld);
-        Debug.LogWarning($"[StartPlacingBuilding] Cellule au centre: {centerCell}.");
 
         Vector2Int size = currentBuildingData.size;
         Vector3Int originCell = new Vector3Int(
@@ -101,8 +100,6 @@ public class BuildingPlacer : MonoBehaviour
         Vector3 originCellWorldPos = floor.GetCellCenterWorld(originCell);
 
         currentGhost = Instantiate(data.prefab, originCellWorldPos, Quaternion.identity);
-        Debug.LogWarning($"[StartPlacingBuilding] Position initial du batiment: {originCellWorldPos}.");
-
         SetGhostVisual(currentGhost, true);
         isPlacing = true;
 
@@ -113,10 +110,7 @@ public class BuildingPlacer : MonoBehaviour
     public void ValidatePlacement()
     {
         if (!isPlacing || currentGhost == null || currentBuildingData == null)
-        {
-            Debug.LogWarning("[ValidatePlacement] État invalide : placement annulé.");
             return;
-        }
 
         Vector3Int centerCell = floor.WorldToCell(currentGhost.transform.position);
         Vector2Int size = currentBuildingData.size;
@@ -142,11 +136,11 @@ public class BuildingPlacer : MonoBehaviour
         {
             buildingInstance.cellPosition = centerCell;
             buildingInstance.SaveCurrentPosition();
-            RegisterBuildingCells(centerCell, currentBuildingData.size); // Réenregistrement ici
+            RegisterBuildingCells(centerCell, currentBuildingData.size);
         }
         else
         {
-            Debug.LogWarning("[ValidatePlacement] Aucun composant BuildingInstance trouvé sur le bâtiment");
+            Debug.LogWarning("[ValidatePlacement] Aucun BuildingInstance trouvé sur le bâtiment");
         }
 
         SaveCurrentBuildings();
@@ -164,12 +158,8 @@ public class BuildingPlacer : MonoBehaviour
                 {
                     instance.cellPosition = initialCellPosition;
                     currentGhost.transform.position = floor.GetCellCenterWorld(initialCellPosition);
-
-                    // Réenregistrer les anciennes cellules
                     RegisterBuildingCells(initialCellPosition, instance.data.size);
-                    Debug.Log("[CancelPlacement] Anciennes cellules réenregistrées");
                 }
-
                 SetGhostVisual(currentGhost, false);
             }
             else
@@ -178,7 +168,6 @@ public class BuildingPlacer : MonoBehaviour
                 return;
             }
         }
-
         EndPlacement(false);
     }
 
@@ -190,13 +179,13 @@ public class BuildingPlacer : MonoBehaviour
         }
 
         ClearIndicators();
-
         currentGhost = null;
         currentBuildingData = null;
         isPlacing = false;
     }
+    #endregion
 
-    // Déterminer si le bâtiment est en mode fantôme (Placement)
+    #region Visuals
     public void SetGhostVisual(GameObject ghost, bool ghostMode)
     {
         SpriteRenderer renderer = ghost.GetComponent<SpriteRenderer>();
@@ -233,14 +222,14 @@ public class BuildingPlacer : MonoBehaviour
             Debug.LogWarning("[SetGhostVisual] Panel des boutons non trouvé dans le prefab fantôme");
         }
 
-        // Toggle le script permettant de déplacer un bâtiment
         ghost.GetComponent<DragToGrid>().enabled = ghostMode;
         ghost.GetComponent<BuildingLongPress>().enabled = !ghostMode;
     }
+    #endregion
 
+    #region Placement Mode
     public void EnterPlacementModeFor(GameObject building)
     {
-        // Si un autre bâtiment est déjà en mode fantôme, annule-le
         if (isPlacing && currentGhost != null && currentGhost != building)
         {
             CancelPlacement();
@@ -253,34 +242,20 @@ public class BuildingPlacer : MonoBehaviour
         var instance = building.GetComponent<BuildingInstance>();
         initialCellPosition = instance.cellPosition;
 
-        // Libérer les anciennes cellules
         UnregisterBuildingCells(instance.cellPosition, instance.data.size);
 
-        // Générer les indicateurs sous le bâtiment
         Vector3Int centerCell = floor.WorldToCell(building.transform.position);
         GeneratePlacementIndicators(centerCell);
     }
+    #endregion
 
-    public void UnregisterBuildingCells(Vector3Int originCell, Vector2Int size)
-    {
-        for (int x = 0; x < size.x; x++)
-        {
-            for (int y = 0; y < size.y; y++)
-            {
-                Vector3Int cell = new Vector3Int(originCell.x + x, originCell.y + y, originCell.z);
-                occupiedCells.Remove(cell);
-            }
-        }
-    }
-
+    #region Indicators
     private void GeneratePlacementIndicators(Vector3Int centerCell)
     {
         lastCell = centerCell;
-
         ClearIndicators();
 
         Vector2Int size = currentBuildingData.size;
-
         Vector3Int originCell = new Vector3Int(
             centerCell.x - (size.x - 1) / 2,
             centerCell.y - (size.y - 1) / 2,
@@ -299,11 +274,9 @@ public class BuildingPlacer : MonoBehaviour
                 );
 
                 Vector3 worldPos = floor.GetCellCenterWorld(cellPos);
-
                 GameObject indicator = Instantiate(tileIndicator, worldPos, Quaternion.Euler(63f, 0f, 0f));
 
                 bool isValid = IsCellValid(cellPos);
-
                 var renderer = indicator.GetComponent<SpriteRenderer>();
                 if (renderer != null)
                 {
@@ -315,43 +288,39 @@ public class BuildingPlacer : MonoBehaviour
                 {
                     Debug.LogWarning($"[GeneratePlacementIndicators] Aucun SpriteRenderer trouvé sur l'indicateur {indicator.name}");
                 }
-
                 currentIndicators.Add(indicator);
             }
         }
-    }
-
-    private bool IsCellValid(Vector3Int cell)
-    {
-        // Si la cellule est déjà occupée 
-        if (occupiedCells.Contains(cell)) 
-        {
-            return false;
-        }
-
-        // Si la cellule n'est pas de type "Floor"
-        if (!floor.HasTile(cell)) 
-        {
-            return false;
-        }
-
-        Vector3Int obstacleCell = new Vector3Int(cell.x, cell.y, 1);
-
-        return true;
     }
 
     private void ClearIndicators()
     {
         foreach (var indicator in currentIndicators)
         {
-            if (indicator != null) 
-            { 
+            if (indicator != null)
+            {
                 Destroy(indicator);
             }
         }
-
         currentIndicators.Clear();
-    }   
+    }
+    #endregion
+
+    #region Cells Management
+    private bool IsCellValid(Vector3Int cell)
+    {
+        if (occupiedCells.Contains(cell))
+        {
+            return false;
+        }
+
+        if (!floor.HasTile(cell))
+        {
+            return false;
+        }
+
+        return true;
+    }
 
     // Déterminer les cellules occupées par un bâtiment
     public void RegisterBuildingCells(Vector3Int originCell, Vector2Int size)
@@ -366,11 +335,24 @@ public class BuildingPlacer : MonoBehaviour
         }
     }
 
-    // Enregistrer les bâtiments dans le fichier JSON
+    public void UnregisterBuildingCells(Vector3Int originCell, Vector2Int size)
+    {
+        for (int x = 0; x < size.x; x++)
+        {
+            for (int y = 0; y < size.y; y++)
+            {
+                Vector3Int cell = new Vector3Int(originCell.x + x, originCell.y + y, originCell.z);
+                occupiedCells.Remove(cell);
+            }
+        }
+    }
+    #endregion
+
+    #region Save
     private void SaveCurrentBuildings()
     {
         GameObject[] placedBuildings = GameObject.FindGameObjectsWithTag("Building");
-        List<GameObject> buildingList = new List<GameObject>(placedBuildings);
-        SavedController.Save(buildingList, floor);
+        SavedController.Save(new List<GameObject>(placedBuildings), floor);
     }
+    #endregion
 }
