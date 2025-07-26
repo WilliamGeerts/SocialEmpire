@@ -149,9 +149,9 @@ GameObject:
   - component: {fileID: 9076943414031487890}
   - component: {fileID: -8617795364364308137}
   - component: {fileID: 2528068532543830576}
-  - component: {fileID: 4462324290881962071}
+  - component: {fileID: 2222890494096862571}
   m_Layer: 0
-  m_Name: House
+  m_Name: Castle
   m_TagString: Building
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -166,7 +166,7 @@ Transform:
   m_GameObject: {fileID: 1687342909242316993}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 17.195, y: 1.678, z: 0}
+  m_LocalPosition: {x: 16.42831, y: 2.5142689, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -217,12 +217,12 @@ SpriteRenderer:
   m_SortingLayerID: -982842835
   m_SortingLayer: 2
   m_SortingOrder: 0
-  m_Sprite: {fileID: -1680131537435045546, guid: 354ee81263f5e2a42a5feacf06f8e93d, type: 3}
+  m_Sprite: {fileID: -1383048135825202805, guid: f8bdc1f3e9fc8e243b174b4030105a20, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 2, y: 2.245098}
+  m_Size: {x: 5, y: 4.810845}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -252,7 +252,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4e2184d6cf28fde469ab9ae2038e4d7b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  buildingName: House
+  buildingName: Castle
   cellPosition: {x: 0, y: 0, z: 0}
   data:
     name: 
@@ -270,7 +270,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bca4e821b01a45e419e08a77fcbf357e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!61 &4462324290881962071
+--- !u!61 &2222890494096862571
 BoxCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -304,17 +304,17 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0.6511406}
+  m_Offset: {x: 0, y: 2.2086933}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.115}
-    oldSize: {x: 2, y: 2.245098}
-    newSize: {x: 2, y: 2.245098}
+    pivot: {x: 0.5, y: 0.06}
+    oldSize: {x: 5, y: 4.810845}
+    newSize: {x: 5, y: 4.810845}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 2.2545018, y: 2.170468}
+  m_Size: {x: 5, y: 4.9082074}
   m_EdgeRadius: 0
 --- !u!1 &3977089088962243302
 GameObject:
@@ -352,7 +352,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 10, y: 10}
+  m_AnchoredPosition: {x: 31.4, y: 10}
   m_SizeDelta: {x: 20, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &982865362993493919
@@ -484,8 +484,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -0.00000047683716, y: 0.0000010728836}
-  m_SizeDelta: {x: 52.25, y: 61.75}
+  m_AnchoredPosition: {x: 0.0000023841858, y: 0.000011205673}
+  m_SizeDelta: {x: 95, y: 111.15}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7823423416725616613
 CanvasRenderer:
@@ -531,8 +531,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0.1193}
-  m_SizeDelta: {x: 2.75, y: 3.25}
+  m_AnchoredPosition: {x: 0, y: 1.725}
+  m_SizeDelta: {x: 5, y: 5.85}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!223 &1056983932358936416
 Canvas:
@@ -634,7 +634,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: -10, y: 10}
+  m_AnchoredPosition: {x: -30.8, y: 10}
   m_SizeDelta: {x: 20, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7161965557545571040

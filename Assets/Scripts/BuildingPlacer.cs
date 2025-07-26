@@ -13,7 +13,6 @@ public class BuildingPlacer : MonoBehaviour
     public Tilemap floor;
 
     [Header("UI")]
-    public CameraController cameraController;
     public ShopController shopController;
 
     [Header("Indicators")]
@@ -100,9 +99,6 @@ public class BuildingPlacer : MonoBehaviour
         SetGhostVisual(currentGhost, true);
         isPlacing = true;
 
-        if (cameraController != null)
-            cameraController.enabled = false;
-
         // Les indicateurs sont alignés sur la cellule d'origine (coin bas gauche)
         GeneratePlacementIndicators(centerCell);
     }
@@ -167,11 +163,6 @@ public class BuildingPlacer : MonoBehaviour
         currentGhost = null;
         currentBuildingData = null;
         isPlacing = false;
-
-        if (cameraController != null)
-        {
-            cameraController.enabled = true;
-        }
     }
 
 

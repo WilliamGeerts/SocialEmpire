@@ -43,14 +43,14 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
-  - name: Ground
+  - name: Floor
     uniqueID: 916404411
     locked: 0
-  - name: Layer1
-    uniqueID: 11128643
-    locked: 0
-  - name: Buildings
+  - name: Building
     uniqueID: 3312124461
+    locked: 0
+  - name: BuildingUI
+    uniqueID: 576447693
     locked: 0
   - name: UI
     uniqueID: 326161327
