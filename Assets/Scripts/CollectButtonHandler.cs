@@ -15,11 +15,8 @@ public class CollectButtonHandler : MonoBehaviour
     {
         if (buildingInstance != null)
         {
-            GameController controller = FindObjectOfType<GameController>();
-            if (controller != null)
-            {
-                controller.CollectResources(buildingInstance);
-            }
+            GameController controller = FindFirstObjectByType<GameController>();
+            controller?.CollectResources(buildingInstance);
         }
     }
 }

@@ -15,6 +15,7 @@ public static class PlayerInventory
         return resources;
     }
 
+    // Ajouter ou mettre à jour la quantité d'un type de ressource
     public static void AddResource(string type, int amount)
     {
         var resource = resources.Find(r => r.resourceType == type);
@@ -27,6 +28,7 @@ public static class PlayerInventory
         Debug.Log($"[Inventory] +{amount} {type} (Total: {resource.amount})");
     }
 
+    // Récupérer la quantité d'une ressource spécifique
     public static int GetResourceAmount(string type)
     {
         var resource = resources.Find(r => r.resourceType == type);

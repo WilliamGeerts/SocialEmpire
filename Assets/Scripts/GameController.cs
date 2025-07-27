@@ -1,7 +1,7 @@
 using UnityEngine;
 using System;
-using System.Globalization;
 using System.Collections.Generic;
+using System.Globalization;
 
 public class GameController : MonoBehaviour
 {
@@ -19,19 +19,18 @@ public class GameController : MonoBehaviour
 
     public void CollectResources(BuildingInstance building)
     {
-        if (building.production == null)
+        if (!building.hasProduction)
             return;
 
-        int produced = CalculateProducedAmount(building.production);
+        int produced = CalculateProducedAmount(building, building.lastCollected);
         if (produced > 0)
         {
             PlayerInventory.AddResource(building.production.resourceType, produced);
-            building.production.lastCollected = DateTime.UtcNow.ToString("o");
+            building.lastCollected = DateTime.UtcNow.ToString("o");
             building.SetCollectButtonVisible(false);
 
-            // Sauvegarde bâtiments + inventaire
             SavedController.Save(new List<GameObject>(GameObject.FindGameObjectsWithTag("Building")), buildingPlacer.floor);
-            Debug.Log($"[CollectResources] {produced} {building.production.resourceType} collecté(s) et ajouté(s) à l'inventaire.");
+            Debug.Log($"[CollectResources] {produced} {building.production.resourceType} collecté(s).");
         }
     }
 
@@ -49,26 +48,13 @@ public class GameController : MonoBehaviour
                 continue;
             }
 
-            if (instance.production == null)
-            {
-                Debug.Log($"[CheckBuildingsProduction] {instance.buildingName} ne produit rien (production = null).");
+            if (!instance.hasProduction)
                 continue;
-            }
 
-            int produced = CalculateProducedAmount(instance.production);
+            int produced = CalculateProducedAmount(instance, instance.lastCollected);
             Debug.Log($"[CheckBuildingsProduction] {instance.buildingName} -> {produced} {instance.production.resourceType} disponible(s).");
 
             instance.SetCollectButtonVisible(produced > 0);
-
-            // Vérification de l'état du bouton
-            if (instance.collectButton != null)
-            {
-                Debug.Log($"[CheckBuildingsProduction] Bouton collect de {instance.buildingName} -> {(instance.collectButton.activeSelf ? "ACTIF" : "INACTIF")}.");
-            }
-            else
-            {
-                Debug.LogWarning($"[CheckBuildingsProduction] Aucun collectButton trouvé sur {instance.buildingName}.");
-            }
         }
     }
 
@@ -79,33 +65,29 @@ public class GameController : MonoBehaviour
 
         foreach (PlacedBuildingData placed in savedData.buildings)
         {
-            BuildingData data = buildingPlacer.availableBuildings.Find(b => b.name == placed.buildingName);
-
-            if (data != null && data.prefab != null)
+            GameObject prefab = buildingPlacer.availableBuildingPrefabs.Find(b => b.name == placed.buildingName);
+            if (prefab != null)
             {
                 Vector3 finalPos = buildingPlacer.floor.GetCellCenterWorld(placed.cellPosition);
                 finalPos.z = 0f;
 
-                GameObject building = Instantiate(data.prefab, finalPos, Quaternion.identity);
-
+                GameObject building = Instantiate(prefab, finalPos, Quaternion.identity);
                 BuildingInstance instance = building.GetComponent<BuildingInstance>();
+
                 if (instance != null)
                 {
-                    instance.buildingName = data.name;
+                    instance.buildingName = prefab.name;
                     instance.cellPosition = placed.cellPosition;
-                    instance.data = data;
+                    instance.lastCollected = placed.lastCollected ?? DateTime.UtcNow.ToString("o");
 
-                    // Copie la production
-                    instance.production = placed.production;
-
-                    if (placed.production != null)
+                    if (instance.hasProduction)
                     {
-                        int produced = CalculateProducedAmount(placed.production);
-                        Debug.Log($"{placed.buildingName} a produit {produced} {placed.production.resourceType} depuis ta dernière session !");
+                        int produced = CalculateProducedAmount(instance, instance.lastCollected);
+                        Debug.Log($"{placed.buildingName} a produit {produced} {instance.production.resourceType} depuis ta dernière session !");
                     }
                 }
 
-                buildingPlacer.RegisterBuildingCells(placed.cellPosition, data.size);
+                buildingPlacer.RegisterBuildingCells(placed.cellPosition, instance.size);
             }
             else
             {
@@ -116,42 +98,36 @@ public class GameController : MonoBehaviour
         Debug.Log($"{savedData.buildings.Count} bâtiment(s) chargé(s).");
     }
 
-    int CalculateProducedAmount(ProductionData production)
+    int CalculateProducedAmount(BuildingInstance instance, string lastCollected)
     {
-        if (production == null)
-            return 0;
-
-        if (string.IsNullOrEmpty(production.lastCollected))
+        if (!instance.hasProduction || instance.production.cycleDurationSeconds <= 0)
         {
-            Debug.LogWarning($"[CalculateProducedAmount] {production.resourceType} : lastCollected vide. Initialisation (-5s).");
-            production.lastCollected = DateTime.UtcNow.Subtract(TimeSpan.FromSeconds(5)).ToString("o");
+            Debug.LogError($"[CalculateProducedAmount] {instance.buildingName} : production désactivée ou cycle invalide.");
             return 0;
         }
 
         DateTime lastCollectedTime;
-        if (!DateTime.TryParse(production.lastCollected, null, DateTimeStyles.AdjustToUniversal, out lastCollectedTime))
+        if (string.IsNullOrEmpty(lastCollected) ||
+            !DateTime.TryParse(lastCollected, null, DateTimeStyles.AdjustToUniversal, out lastCollectedTime))
         {
-            Debug.LogWarning($"[CalculateProducedAmount] {production.resourceType} : Parsing impossible pour lastCollected '{production.lastCollected}'. Réinitialisation.");
-            production.lastCollected = DateTime.UtcNow.Subtract(TimeSpan.FromSeconds(5)).ToString("o");
-            return 0;
+            Debug.LogWarning($"[CalculateProducedAmount] {instance.production.resourceType} : lastCollected invalide. Init (-5s).");
+            lastCollectedTime = DateTime.UtcNow.Subtract(TimeSpan.FromSeconds(5));
         }
 
-        // Comparaison UTC
         DateTime now = DateTime.UtcNow;
         if (lastCollectedTime > now)
         {
-            Debug.LogWarning($"[CalculateProducedAmount] {production.resourceType} : lastCollected est dans le futur ({lastCollectedTime}). Correction.");
-            // On corrige UNE SEULE FOIS en retirant 5s
-            production.lastCollected = now.Subtract(TimeSpan.FromSeconds(5)).ToString("o");
-            return 0;
+            Debug.LogWarning($"[CalculateProducedAmount] {instance.production.resourceType} : lastCollected dans le futur ({lastCollectedTime}). Correction.");
+            lastCollectedTime = now.Subtract(TimeSpan.FromSeconds(5));
         }
 
         TimeSpan elapsed = now - lastCollectedTime;
-        int cycles = (int)(elapsed.TotalSeconds / production.cycleDurationSeconds);
-        int totalProduced = cycles * production.amountPerCycle;
+        int cycles = (int)(elapsed.TotalSeconds / instance.production.cycleDurationSeconds);
+        int totalProduced = cycles * instance.production.amountPerCycle;
 
-        Debug.Log($"[CalculateProducedAmount] {production.resourceType} : {elapsed.TotalSeconds:F1}s écoulées, {cycles} cycles -> {totalProduced} produits (capacité {production.storageCapacity}).");
+        int finalAmount = Mathf.Min(totalProduced, instance.production.storageCapacity);
+        Debug.Log($"[CalculateProducedAmount] {instance.buildingName} : {elapsed.TotalSeconds:F1}s écoulées, {cycles} cycles -> {finalAmount}/{instance.production.storageCapacity} produits.");
 
-        return Mathf.Min(totalProduced, production.storageCapacity);
+        return finalAmount;
     }
 }

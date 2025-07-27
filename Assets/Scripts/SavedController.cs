@@ -9,9 +9,11 @@ public static class SavedController
 
     public static void Save(List<GameObject> placedBuildings, Tilemap floor)
     {
-        SavedData data = new SavedData();
-        data.buildings = new List<PlacedBuildingData>();
-        data.inventory = PlayerInventory.GetInventory();
+        SavedData data = new SavedData
+        {
+            buildings = new List<PlacedBuildingData>(),
+            inventory = PlayerInventory.GetInventory()
+        };
 
         foreach (var go in placedBuildings)
         {
@@ -22,25 +24,27 @@ public static class SavedController
                 {
                     buildingName = instance.buildingName,
                     cellPosition = instance.cellPosition,
-                    production = instance.production // << Ajoute cette ligne
+                    lastCollected = instance.lastCollected
                 });
             }
         }
 
         string json = JsonUtility.ToJson(data, true);
-        System.IO.File.WriteAllText(saveFile, json);
+        File.WriteAllText(saveFile, json);
+        Debug.Log($"[SavedController] Sauvegarde effectuée : {saveFile}");
     }
 
     public static SavedData Load()
     {
         if (!File.Exists(saveFile))
         {
-            Debug.LogWarning("⚠️ Aucune sauvegarde trouvée. Nouveau fichier créé.");
-            return new SavedData(); // sauvegarde vide
+            Debug.LogWarning("Aucune sauvegarde trouvée. Nouveau fichier créé.");
+            return new SavedData();
         }
 
         string json = File.ReadAllText(saveFile);
         SavedData data = JsonUtility.FromJson<SavedData>(json);
+        Debug.Log($"[SavedController] Sauvegarde chargée : {saveFile}");
         return data;
     }
 }

@@ -66,5 +66,15 @@
     "explorer.fileNesting.patterns": {
         "*.sln": "*.csproj",
     },
-    "dotnet.defaultSolution": "Clash of Pietroll.sln"
+    "dotnet.defaultSolution": "Clash of Pietroll.sln",
+    "[csharp]": {
+        "editor.defaultFormatter": "csharpier.csharpier-vscode"
+    },
+    "editor.formatOnSave": true,
+    "editor.formatOnPaste": false,
+    "editor.formatOnType": false,
+    "explorer.compactFolders": false,
+    "dotnet_sort_system_directives_first": true,
+    "csharpier.semi_colons": "insert",
+    "csharpier.space_after_cast": true    
 }

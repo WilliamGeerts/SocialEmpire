@@ -1,11 +1,10 @@
 using UnityEngine;
 using System.Linq;
 
-/// Activer le DragToGrid et le mode fantôme sur un bâtiment après un appui long (1s).
 [RequireComponent(typeof(Collider2D))]
 public class BuildingLongPress : MonoBehaviour
 {
-    public float holdDuration = 1f;  // Durée avant activation
+    [SerializeField] private readonly float holdDuration = 0.5f;
     private float pressTime = 0f;
     private bool pressStarted = false;
     private Camera mainCamera;
@@ -16,7 +15,7 @@ public class BuildingLongPress : MonoBehaviour
     {
         mainCamera = Camera.main;
         dragToGrid = GetComponent<DragToGrid>();
-        buildingPlacer = FindObjectOfType<BuildingPlacer>();
+        buildingPlacer = FindFirstObjectByType<BuildingPlacer>();
 
         // Désactiver DragToGrid par défaut
         if (dragToGrid != null)
@@ -38,7 +37,6 @@ public class BuildingLongPress : MonoBehaviour
         if (Input.GetMouseButtonDown(0))
         {
             Collider2D[] hits = Physics2D.OverlapPointAll(mouseWorldPos);
-
             if (hits.Length > 0)
             {
                 Collider2D topCollider = hits
@@ -85,7 +83,7 @@ public class BuildingLongPress : MonoBehaviour
         }
         else
         {
-            Debug.LogWarning("[LongPressToEnableDrag] Aucun BuildingPlacer trouvé dans la scène !");
+            Debug.LogWarning("[BuildingLongPress] Aucun BuildingPlacer trouvé dans la scène !");
         }
     }
 }

@@ -1,7 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-using System.Collections.Generic;
 
 public class ShopController : MonoBehaviour
 {
@@ -32,11 +31,16 @@ public class ShopController : MonoBehaviour
             return;
         }
 
-        Debug.Log($"[Shop] {buildingPlacer.availableBuildings.Count} bâtiments à afficher.");
+        Debug.Log($"[Shop] {buildingPlacer.availableBuildingPrefabs.Count} bâtiments à afficher.");
 
-        foreach (var data in buildingPlacer.availableBuildings)
+        foreach (var prefab in buildingPlacer.availableBuildingPrefabs)
         {
-            Debug.Log($"[Shop] Création d’un bouton pour : {data.name}");
+            BuildingInstance instance = prefab.GetComponent<BuildingInstance>();
+            if (instance == null)
+            {
+                Debug.LogWarning($"[Shop] Le prefab '{prefab.name}' n'a pas de BuildingInstance.");
+                continue;
+            }
 
             GameObject buttonObj = Instantiate(buttonPrefab, buttonContainer);
 
@@ -45,25 +49,17 @@ public class ShopController : MonoBehaviour
             var button = buttonObj.GetComponent<Button>();
 
             if (titleText != null)
-            {
-                titleText.text = data.name;
-            }
+                titleText.text = instance.buildingName;
             else
-            {
                 Debug.LogWarning("[Shop] Aucun composant TextMeshProUGUI trouvé dans 'BuildingText'.");
-            }
 
             if (iconImage != null)
             {
-                var spriteRenderer = data.prefab.GetComponentInChildren<SpriteRenderer>();
+                var spriteRenderer = prefab.GetComponentInChildren<SpriteRenderer>();
                 if (spriteRenderer != null)
-                {
                     iconImage.sprite = spriteRenderer.sprite;
-                }
                 else
-                {
-                    Debug.LogWarning($"[Shop] Aucun SpriteRenderer trouvé dans le prefab de '{data.name}' !");
-                }
+                    Debug.LogWarning($"[Shop] Aucun SpriteRenderer trouvé dans le prefab '{prefab.name}' !");
             }
             else
             {
@@ -72,7 +68,7 @@ public class ShopController : MonoBehaviour
 
             if (button != null)
             {
-                string name = data.name; // capture locale
+                string name = prefab.name;
                 button.onClick.AddListener(() => {
                     Debug.Log($"[Shop] Bouton '{name}' cliqué.");
                     buildingPlacer.StartPlacingBuildingByName(name);

@@ -23,7 +23,7 @@ public class DragToGrid : MonoBehaviour
             }
             else 
             {
-                Debug.LogError("Tilemap 'Floor' non trouvée ! Vérifie le nom exact dans la hiérarchie.");
+                Debug.LogError("[DragToGrid] Tilemap 'Floor' non trouvée ! Vérifie le nom exact dans la hiérarchie.");
             }
         }
     }
@@ -35,12 +35,9 @@ public class DragToGrid : MonoBehaviour
 
         if (Input.GetMouseButtonDown(0))
         {
-            // Récupérer tous les colliders sous la souris
             Collider2D[] hits = Physics2D.OverlapPointAll(mouseWorldPos);
-
             if (hits.Length > 0)
             {
-                // Sélectionner celui qui est visuellement au-dessus
                 Collider2D topCollider = hits
                     .OrderByDescending(h => h.GetComponent<SpriteRenderer>()?.sortingOrder ?? 0)
                     .First();
@@ -69,21 +66,19 @@ public class DragToGrid : MonoBehaviour
 
     private void DragBuilding(Vector3 mouseWorldPos)
     {
-        // Cellule centrale sous la souris
         Vector3Int centerCell = tilemap.WorldToCell(mouseWorldPos);
 
         // Taille du bâtiment
         BuildingInstance instance = GetComponent<BuildingInstance>();
-        Vector2Int size = instance != null && instance.data != null ? instance.data.size : Vector2Int.one;
+        Vector2Int size = instance != null ? instance.size : Vector2Int.one;
 
-        // Convertit la cellule centrale en cellule d’origine (bas gauche)
+        // Cellule d'origine
         Vector3Int originCell = new Vector3Int(
             centerCell.x - (size.x - 1) / 2,
             centerCell.y - (size.y - 1) / 2,
             0
         );
 
-        // Aligner la position du bâtiment sur le centre de la cellule d’origine
         Vector3 alignedPos = tilemap.GetCellCenterWorld(originCell);
         alignedPos.z = 0f;
         transform.position = alignedPos;
