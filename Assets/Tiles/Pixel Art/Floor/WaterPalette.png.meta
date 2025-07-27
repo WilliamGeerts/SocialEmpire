@@ -1,0 +1,546 @@
+fileFormatVersion: 2
+guid: 5ef4011eb9b6387479a151a2c5199a5c
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -1358791745173850588
+    second: WaterPalette_0
+  - first:
+      213: -7737134170566155371
+    second: WaterPalette_1
+  - first:
+      213: 6900672059297546982
+    second: WaterPalette_2
+  - first:
+      213: 2534026551869693613
+    second: WaterPalette_3
+  - first:
+      213: 2066528781067348503
+    second: WaterPalette_4
+  - first:
+      213: 6725611861695004692
+    second: WaterPalette_5
+  - first:
+      213: -621316185529436152
+    second: WaterPalette_6
+  - first:
+      213: 7295821718028991482
+    second: WaterPalette_7
+  - first:
+      213: 5850628277793676338
+    second: WaterPalette_8
+  - first:
+      213: -3512908788664152326
+    second: WaterPalette_9
+  - first:
+      213: 9029773565324290707
+    second: WaterPalette_10
+  - first:
+      213: -198390772704202051
+    second: WaterPalette_11
+  - first:
+      213: -890482200534981290
+    second: WaterPalette_12
+  - first:
+      213: 1933142240151441385
+    second: WaterPalette_13
+  - first:
+      213: 4553575465494780162
+    second: WaterPalette_14
+  - first:
+      213: -575729840207340072
+    second: WaterPalette_15
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 223
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: WaterPalette_0
+      rect:
+        serializedVersion: 2
+        x: 20
+        y: 810
+        width: 221
+        height: 182
+      alignment: 9
+      pivot: {x: 0.5, y: 0.4}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 426fd216b1a942de0800000000000000
+      internalID: -1358791745173850588
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WaterPalette_1
+      rect:
+        serializedVersion: 2
+        x: 273
+        y: 809
+        width: 224
+        height: 184
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5932ed7077d20a490800000000000000
+      internalID: -7737134170566155371
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WaterPalette_2
+      rect:
+        serializedVersion: 2
+        x: 528
+        y: 808
+        width: 225
+        height: 185
+      alignment: 9
+      pivot: {x: 0.5, y: 0.4}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6e2c4e53dac14cf50800000000000000
+      internalID: 6900672059297546982
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WaterPalette_3
+      rect:
+        serializedVersion: 2
+        x: 783
+        y: 809
+        width: 226
+        height: 184
+      alignment: 9
+      pivot: {x: 0.5, y: 0.4}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: daed99b19bbaa2320800000000000000
+      internalID: 2534026551869693613
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WaterPalette_4
+      rect:
+        serializedVersion: 2
+        x: 19
+        y: 559
+        width: 224
+        height: 184
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 71ae3a93af8cdac10800000000000000
+      internalID: 2066528781067348503
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WaterPalette_5
+      rect:
+        serializedVersion: 2
+        x: 273
+        y: 559
+        width: 224
+        height: 184
+      alignment: 9
+      pivot: {x: 0.5, y: 0.4}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4100c79ba5c265d50800000000000000
+      internalID: 6725611861695004692
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WaterPalette_6
+      rect:
+        serializedVersion: 2
+        x: 528
+        y: 559
+        width: 225
+        height: 184
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 808315c9834a067f0800000000000000
+      internalID: -621316185529436152
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WaterPalette_7
+      rect:
+        serializedVersion: 2
+        x: 783
+        y: 559
+        width: 226
+        height: 184
+      alignment: 9
+      pivot: {x: 0.5, y: 0.4}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: afbb2b79237ff3560800000000000000
+      internalID: 7295821718028991482
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WaterPalette_8
+      rect:
+        serializedVersion: 2
+        x: 19
+        y: 311
+        width: 224
+        height: 184
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 23c5fb2bb6b913150800000000000000
+      internalID: 5850628277793676338
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WaterPalette_9
+      rect:
+        serializedVersion: 2
+        x: 272
+        y: 311
+        width: 225
+        height: 185
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: afe4353a114af3fc0800000000000000
+      internalID: -3512908788664152326
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WaterPalette_10
+      rect:
+        serializedVersion: 2
+        x: 528
+        y: 311
+        width: 225
+        height: 185
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 39aed534733305d70800000000000000
+      internalID: 9029773565324290707
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WaterPalette_11
+      rect:
+        serializedVersion: 2
+        x: 783
+        y: 311
+        width: 225
+        height: 185
+      alignment: 9
+      pivot: {x: 0.5, y: 0.4}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: db23042b4ac2f3df0800000000000000
+      internalID: -198390772704202051
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WaterPalette_12
+      rect:
+        serializedVersion: 2
+        x: 19
+        y: 63
+        width: 224
+        height: 186
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 655ed46182f54a3f0800000000000000
+      internalID: -890482200534981290
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WaterPalette_13
+      rect:
+        serializedVersion: 2
+        x: 272
+        y: 64
+        width: 225
+        height: 185
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9ef878c00a6e3da10800000000000000
+      internalID: 1933142240151441385
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WaterPalette_14
+      rect:
+        serializedVersion: 2
+        x: 528
+        y: 64
+        width: 224
+        height: 185
+      alignment: 9
+      pivot: {x: 0.5, y: 0.4}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 20910ce82cc813f30800000000000000
+      internalID: 4553575465494780162
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WaterPalette_15
+      rect:
+        serializedVersion: 2
+        x: 783
+        y: 64
+        width: 225
+        height: 185
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8dd59dbb2c89208f0800000000000000
+      internalID: -575729840207340072
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: e03942f2e0cbd8443a1137cc8a8c940b
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      WaterPalette_0: -1358791745173850588
+      WaterPalette_1: -7737134170566155371
+      WaterPalette_10: 9029773565324290707
+      WaterPalette_11: -198390772704202051
+      WaterPalette_12: -890482200534981290
+      WaterPalette_13: 1933142240151441385
+      WaterPalette_14: 4553575465494780162
+      WaterPalette_15: -575729840207340072
+      WaterPalette_2: 6900672059297546982
+      WaterPalette_3: 2534026551869693613
+      WaterPalette_4: 2066528781067348503
+      WaterPalette_5: 6725611861695004692
+      WaterPalette_6: -621316185529436152
+      WaterPalette_7: 7295821718028991482
+      WaterPalette_8: 5850628277793676338
+      WaterPalette_9: -3512908788664152326
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

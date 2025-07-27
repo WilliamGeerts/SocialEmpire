@@ -7,32 +7,28 @@ public static class SavedController
 {
     private static string saveFile => Path.Combine(Application.persistentDataPath, "save.json");
 
-    public static void Save(List<GameObject> placedBuildings, Tilemap tilemap)
+    public static void Save(List<GameObject> placedBuildings, Tilemap floor)
     {
         SavedData data = new SavedData();
+        data.buildings = new List<PlacedBuildingData>();
+        data.inventory = PlayerInventory.GetInventory();
 
-        foreach (var building in placedBuildings)
+        foreach (var go in placedBuildings)
         {
-            var buildingComponent = building.GetComponent<BuildingInstance>();
-            if (buildingComponent != null)
+            BuildingInstance instance = go.GetComponent<BuildingInstance>();
+            if (instance != null)
             {
-                Vector3Int cellPos = tilemap.WorldToCell(building.transform.position);
-
                 data.buildings.Add(new PlacedBuildingData
                 {
-                    buildingName = buildingComponent.buildingName,
-                    cellPosition = cellPos
+                    buildingName = instance.buildingName,
+                    cellPosition = instance.cellPosition,
+                    production = instance.production // << Ajoute cette ligne
                 });
-            }
-            else
-            {
-                Debug.LogWarning("Un bâtiment n'a pas de BuildingInstance !");
             }
         }
 
         string json = JsonUtility.ToJson(data, true);
-        File.WriteAllText(saveFile, json);
-        Debug.Log("Sauvegarde effectuée : " + saveFile);
+        System.IO.File.WriteAllText(saveFile, json);
     }
 
     public static SavedData Load()
