@@ -194,7 +194,7 @@ public class BuildingPlacer : MonoBehaviour
             Color color = renderer.color;
             color.a = ghostMode ? 0.65f : 1f;
             renderer.color = color;
-            renderer.sortingLayerName = ghostMode ? "BuildingGhost" : "Building";
+            renderer.sortingLayerName = ghostMode ? "BuildingGhost" : "Floor";
         }
         else
         {
@@ -314,7 +314,15 @@ public class BuildingPlacer : MonoBehaviour
             return false;
         }
 
+        // Floor (Z = 0)
         if (!floor.HasTile(cell))
+        {
+            return false;
+        }
+
+        // Floor (Z = 1)
+        Vector3Int aboveCell = new Vector3Int(cell.x, cell.y, cell.z + 1);
+        if (floor.HasTile(aboveCell))
         {
             return false;
         }

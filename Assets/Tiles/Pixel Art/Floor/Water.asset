@@ -9,15 +9,28 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 13b75c95f34a00d4e8c04f76b73312e6, type: 3}
+  m_Script: {fileID: 13312, guid: 0000000000000000e000000000000000, type: 0}
   m_Name: Water
   m_EditorClassIdentifier: 
-  m_AnimatedSprites:
-  - {fileID: -5263072948080351909, guid: 9a9fd8390bd2c6844bfddb22653b5f48, type: 3}
-  - {fileID: 4042330106434370556, guid: 9a9fd8390bd2c6844bfddb22653b5f48, type: 3}
-  m_MinSpeed: 3
-  m_MaxSpeed: 3
-  m_AnimationStartTime: 0
-  m_AnimationStartFrame: 0
-  m_TileColliderType: 0
-  m_TileAnimationFlags: 0
+  m_Sprite: {fileID: 9156686078161387531, guid: a9ddf65943f71a049ac758e6e4587158, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Transform:
+    e00: 1
+    e01: 0
+    e02: 0
+    e03: 0
+    e10: 0
+    e11: 1
+    e12: 0
+    e13: 0
+    e20: 0
+    e21: 0
+    e22: 1
+    e23: 0
+    e30: 0
+    e31: 0
+    e32: 0
+    e33: 1
+  m_InstancedGameObject: {fileID: 0}
+  m_Flags: 1
+  m_ColliderType: 1

@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 210719074408033873}
   - component: {fileID: 5834975463129856934}
   - component: {fileID: 811448768241208904}
-  - component: {fileID: 1965259307585048524}
   - component: {fileID: -1901485542930712205}
   - component: {fileID: -3365259786038396459}
   m_Layer: 0
@@ -61,7 +60,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
+  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -79,8 +78,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: -982842835
-  m_SortingLayer: 2
+  m_SortingLayerID: 916404411
+  m_SortingLayer: 1
   m_SortingOrder: 0
   m_Sprite: {fileID: -5356574185940491189, guid: e324271137dc54645af2c135d8eae7d8, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -92,7 +91,7 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
-  m_SpriteSortPoint: 0
+  m_SpriteSortPoint: 1
 --- !u!114 &5834975463129856934
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -124,18 +123,6 @@ MonoBehaviour:
     prefab: {fileID: 0}
     size: {x: 1, y: 1}
   lastValidCell: {x: 0, y: 0, z: 0}
---- !u!114 &1965259307585048524
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 20350135413467958}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bca4e821b01a45e419e08a77fcbf357e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &-1901485542930712205
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -186,7 +173,7 @@ PolygonCollider2D:
   m_Offset: {x: 0, y: 0}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.205}
+    pivot: {x: 0.5, y: 0}
     oldSize: {x: 1.0245231, y: 1.2084469}
     newSize: {x: 7.52, y: 8.87}
     adaptiveTilingThreshold: 0.5

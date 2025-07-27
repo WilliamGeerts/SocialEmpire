@@ -116,12 +116,12 @@ TextureImporter:
       name: ChatGPT Image 26 juil. 2025, 23_39_30 (1)_0
       rect:
         serializedVersion: 2
-        x: 6
-        y: 2
-        width: 731
-        height: 739
+        x: 7
+        y: 11
+        width: 729
+        height: 729
       alignment: 9
-      pivot: {x: 0.5, y: 0.115}
+      pivot: {x: 0.4965, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
