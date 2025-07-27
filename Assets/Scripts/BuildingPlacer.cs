@@ -11,6 +11,7 @@ public class BuildingPlacer : MonoBehaviour
     [Header("Grille et Tilemaps")]
     public Grid grid;
     public Tilemap floor;
+    public Tilemap noBuilds;
 
     [Header("UI")]
     public ShopController shopController;
@@ -323,6 +324,11 @@ public class BuildingPlacer : MonoBehaviour
         // Floor (Z = 1)
         Vector3Int aboveCell = new Vector3Int(cell.x, cell.y, cell.z + 1);
         if (floor.HasTile(aboveCell))
+        {
+            return false;
+        }
+
+        if (noBuilds.HasTile(aboveCell))
         {
             return false;
         }
