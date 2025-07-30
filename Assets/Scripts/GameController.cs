@@ -6,6 +6,7 @@ using System.Globalization;
 public class GameController : MonoBehaviour
 {
     public BuildingPlacer buildingPlacer;
+    public ResourceController resourceController;
 
     void Start()
     {
@@ -29,6 +30,9 @@ public class GameController : MonoBehaviour
             building.lastCollected = DateTime.UtcNow.ToString("o");
             building.SetCollectButtonVisible(false);
 
+            resourceController.UpdateResource(building.production.resourceType,
+                PlayerInventory.GetResourceAmount(building.production.resourceType));
+
             SavedController.Save(new List<GameObject>(GameObject.FindGameObjectsWithTag("Building")), buildingPlacer.floor);
             Debug.Log($"[CollectResources] {produced} {building.production.resourceType} collecté(s).");
         }
@@ -37,7 +41,7 @@ public class GameController : MonoBehaviour
     void CheckBuildingsProduction()
     {
         GameObject[] buildings = GameObject.FindGameObjectsWithTag("Building");
-        Debug.Log($"[CheckBuildingsProduction] {buildings.Length} bâtiment(s) détecté(s).");
+        // Debug.Log($"[CheckBuildingsProduction] {buildings.Length} bâtiment(s) détecté(s).");
 
         foreach (GameObject go in buildings)
         {
@@ -52,7 +56,7 @@ public class GameController : MonoBehaviour
                 continue;
 
             int produced = CalculateProducedAmount(instance, instance.lastCollected);
-            Debug.Log($"[CheckBuildingsProduction] {instance.buildingName} -> {produced} {instance.production.resourceType} disponible(s).");
+            // Debug.Log($"[CheckBuildingsProduction] {instance.buildingName} -> {produced} {instance.production.resourceType} disponible(s).");
 
             instance.SetCollectButtonVisible(produced > 0);
         }
@@ -62,6 +66,8 @@ public class GameController : MonoBehaviour
     {
         SavedData savedData = SavedController.Load();
         PlayerInventory.LoadInventory(savedData.inventory);
+        
+        resourceController.InitUI(savedData.inventory);
 
         foreach (PlacedBuildingData placed in savedData.buildings)
         {
