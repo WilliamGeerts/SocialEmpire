@@ -13,10 +13,23 @@ public class CollectButtonHandler : MonoBehaviour
 
     private void OnCollect()
     {
+        Debug.Log("[CollectButtonHandler] Bouton cliqué");
         if (buildingInstance != null)
         {
+            Debug.Log($"[CollectButtonHandler] Instance trouvée : {buildingInstance.buildingName}");
             GameController controller = FindFirstObjectByType<GameController>();
-            controller?.CollectResources(buildingInstance);
+            if (controller != null)
+            {
+                controller.CollectResources(buildingInstance);
+            }
+            else
+            {
+                Debug.LogError("[CollectButtonHandler] GameController introuvable !");
+            }
+        }
+        else
+        {
+            Debug.LogWarning("[CollectButtonHandler] buildingInstance est null !");
         }
     }
 }

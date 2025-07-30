@@ -8,6 +8,14 @@ public class GameController : MonoBehaviour
     public BuildingPlacer buildingPlacer;
     public ResourceController resourceController;
 
+    [Header("Icones de ressources")]
+    public ResourceIconLibrary iconLibrary;
+
+    void Awake()
+    {
+        BuildingUIController.iconLibrary = iconLibrary;
+    }
+
     void Start()
     {
         LoadGame();
@@ -28,12 +36,20 @@ public class GameController : MonoBehaviour
         {
             PlayerInventory.AddResource(building.production.resourceType, produced);
             building.lastCollected = DateTime.UtcNow.ToString("o");
-            building.SetCollectButtonVisible(false);
 
-            resourceController.UpdateResource(building.production.resourceType,
-                PlayerInventory.GetResourceAmount(building.production.resourceType));
+            // Cacher le bouton de collecte après récolte
+            BuildingUIController.ShowCollectUI(building.gameObject, false);
 
-            SavedController.Save(new List<GameObject>(GameObject.FindGameObjectsWithTag("Building")), buildingPlacer.floor);
+            resourceController.UpdateResource(
+                building.production.resourceType,
+                PlayerInventory.GetResourceAmount(building.production.resourceType)
+            );
+
+            SavedController.Save(
+                new List<GameObject>(GameObject.FindGameObjectsWithTag("Building")),
+                buildingPlacer.floor
+            );
+
             Debug.Log($"[CollectResources] {produced} {building.production.resourceType} collecté(s).");
         }
     }
@@ -41,7 +57,6 @@ public class GameController : MonoBehaviour
     void CheckBuildingsProduction()
     {
         GameObject[] buildings = GameObject.FindGameObjectsWithTag("Building");
-        // Debug.Log($"[CheckBuildingsProduction] {buildings.Length} bâtiment(s) détecté(s).");
 
         foreach (GameObject go in buildings)
         {
@@ -56,9 +71,9 @@ public class GameController : MonoBehaviour
                 continue;
 
             int produced = CalculateProducedAmount(instance, instance.lastCollected);
-            // Debug.Log($"[CheckBuildingsProduction] {instance.buildingName} -> {produced} {instance.production.resourceType} disponible(s).");
 
-            instance.SetCollectButtonVisible(produced > 0);
+            // Affiche ou cache le bouton de collecte selon la production
+            BuildingUIController.ShowCollectUI(go, produced > 0);
         }
     }
 
@@ -66,7 +81,6 @@ public class GameController : MonoBehaviour
     {
         SavedData savedData = SavedController.Load();
         PlayerInventory.LoadInventory(savedData.inventory);
-        
         resourceController.InitUI(savedData.inventory);
 
         foreach (PlacedBuildingData placed in savedData.buildings)
@@ -93,7 +107,14 @@ public class GameController : MonoBehaviour
                     }
                 }
 
-                buildingPlacer.AttachPlacementUI(building); // <-- AJOUT ICI
+                // Attache les UIs dynamiquement
+                BuildingUIController.AttachPlacementUI(building, buildingPlacer.placementUIPrefab);
+
+                if (instance.hasProduction)
+                {
+                    BuildingUIController.AttachCollectUI(building, buildingPlacer.collectUIPrefab);
+                }
+
                 buildingPlacer.RegisterBuildingCells(placed.cellPosition, instance.size);
             }
             else
@@ -132,9 +153,6 @@ public class GameController : MonoBehaviour
         int cycles = (int)(elapsed.TotalSeconds / instance.production.cycleDurationSeconds);
         int totalProduced = cycles * instance.production.amountPerCycle;
 
-        int finalAmount = Mathf.Min(totalProduced, instance.production.storageCapacity);
-        // Debug.Log($"[CalculateProducedAmount] {instance.buildingName} : {elapsed.TotalSeconds:F1}s écoulées, {cycles} cycles -> {finalAmount}/{instance.production.storageCapacity} produits.");
-
-        return finalAmount;
+        return Mathf.Min(totalProduced, instance.production.storageCapacity);
     }
 }

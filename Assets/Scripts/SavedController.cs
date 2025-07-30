@@ -43,7 +43,22 @@ public static class SavedController
         }
 
         string json = File.ReadAllText(saveFile);
+
+        // Vérifie si le fichier est vide
+        if (string.IsNullOrWhiteSpace(json))
+        {
+            Debug.LogWarning("Fichier de sauvegarde vide. Utilisation de données par défaut.");
+            return new SavedData();
+        }
+
         SavedData data = JsonUtility.FromJson<SavedData>(json);
+
+        if (data == null)
+        {
+            Debug.LogError("Échec de la désérialisation. Fichier corrompu ? Création de données par défaut.");
+            return new SavedData();
+        }
+
         Debug.Log($"[SavedController] Sauvegarde chargée : {saveFile}");
         return data;
     }

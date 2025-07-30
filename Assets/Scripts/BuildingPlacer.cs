@@ -16,7 +16,8 @@ public class BuildingPlacer : MonoBehaviour
     public ShopController shopController;
 
     [Header("UI Placement Auto")]
-    [SerializeField] private GameObject placementUIPrefab;
+    public GameObject placementUIPrefab;
+    public GameObject collectUIPrefab;
 
     [Header("Indicators")]
     public GameObject tileIndicator;
@@ -30,56 +31,42 @@ public class BuildingPlacer : MonoBehaviour
     private readonly List<GameObject> currentIndicators = new();
     private readonly HashSet<Vector3Int> occupiedCells = new();
 
-    #region Unity Methods
     private void Update()
     {
         if (isPlacing && currentGhost != null && currentBuildingInstance != null)
         {
             Vector2Int size = currentBuildingInstance.size;
             Vector3Int originCell = floor.WorldToCell(currentGhost.transform.position);
-
             Vector3Int centerCell = new Vector3Int(
                 originCell.x + (size.x - 1) / 2,
                 originCell.y + (size.y - 1) / 2,
                 originCell.z
             );
-
             GeneratePlacementIndicators(centerCell);
         }
     }
-    #endregion
 
-    #region Placement Start / Cancel / Validate
     public void StartPlacingBuildingByName(string buildingName)
     {
         var prefab = availableBuildingPrefabs.Find(b => b.name == buildingName);
         if (prefab != null)
-        {
             StartPlacingBuilding(prefab);
-        }
         else
-        {
             Debug.LogError($"[BuildingPlacer] Building '{buildingName}' not found.");
-        }
     }
 
     public void StartPlacingBuilding(GameObject prefab)
     {
         if (isPlacing && currentGhost != null)
-        {
             CancelPlacement();
-        }
 
         shopController.ToggleShop();
 
         if (currentGhost != null)
-        {
             Destroy(currentGhost);
-        }
 
         ClearIndicators();
 
-        // Récupérer les données depuis le prefab
         currentBuildingInstance = prefab.GetComponent<BuildingInstance>();
         if (currentBuildingInstance == null)
         {
@@ -89,10 +76,9 @@ public class BuildingPlacer : MonoBehaviour
 
         Vector3 screenCenterWorld = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width / 2f, Screen.height / 2f, 0));
         screenCenterWorld.z = 0;
-
         Vector3Int centerCell = floor.WorldToCell(screenCenterWorld);
-        Vector2Int size = currentBuildingInstance.size;
 
+        Vector2Int size = currentBuildingInstance.size;
         Vector3Int originCell = new(
             centerCell.x - (size.x - 1) / 2,
             centerCell.y - (size.y - 1) / 2,
@@ -102,18 +88,19 @@ public class BuildingPlacer : MonoBehaviour
         Vector3 originCellWorldPos = floor.GetCellCenterWorld(originCell);
 
         currentGhost = Instantiate(prefab, originCellWorldPos, Quaternion.identity);
-        AttachPlacementUI(currentGhost);
         currentBuildingInstance = currentGhost.GetComponent<BuildingInstance>();
 
+        // Assigner les différents UI lors de la création du bâtiment
+        BuildingUIController.AttachPlacementUI(currentGhost, placementUIPrefab);
         SetGhostVisual(currentGhost, true);
+
         isPlacing = true;
         GeneratePlacementIndicators(centerCell);
     }
 
     public void ValidatePlacement()
     {
-        
-    Debug.Log("[ValidatePlacement] Called");
+        Debug.Log("[ValidatePlacement] Called");
 
         if (!isPlacing || currentGhost == null || currentBuildingInstance == null)
             return;
@@ -139,6 +126,11 @@ public class BuildingPlacer : MonoBehaviour
         currentBuildingInstance.cellPosition = centerCell;
         RegisterBuildingCells(centerCell, currentBuildingInstance.size);
 
+        if (currentBuildingInstance.hasProduction)
+        {
+            BuildingUIController.AttachCollectUI(currentGhost, collectUIPrefab);
+        }
+        
         SaveCurrentBuildings();
         EndPlacement(false);
     }
@@ -149,33 +141,43 @@ public class BuildingPlacer : MonoBehaviour
 
         if (isRepositioning)
         {
-            // Replacer le bâtiment à sa position initiale
+            // Replacer le bâtiment à sa position d’origine
             currentGhost.transform.position = floor.GetCellCenterWorld(initialCellPosition);
             currentBuildingInstance.cellPosition = initialCellPosition;
 
             // Réenregistrer les cellules
             RegisterBuildingCells(initialCellPosition, currentBuildingInstance.size);
 
-            // Fin du mode repositionnement
+            // Restaurer l'apparence normale (non fantôme)
             SetGhostVisual(currentGhost, false);
-            isRepositioning = false;
-            isPlacing = false;
+
+            // Désactiver l'UI de placement (si elle existe)
+            Transform panel = currentGhost.transform.Find("PlacementUI");
+            if (panel != null)
+            {
+                panel.gameObject.SetActive(false);
+            }
+
+            // Nettoyer
             ClearIndicators();
+            isPlacing = false;
+            isRepositioning = false;
             currentGhost = null;
             currentBuildingInstance = null;
         }
         else
         {
-            // Cas d'un nouveau bâtiment fantôme
+            // Nouveau bâtiment annulé → on le supprime
             EndPlacement();
         }
     }
 
     private void EndPlacement(bool destroyGhost = true)
     {
-        if (destroyGhost && currentGhost != null)
+        if (currentGhost != null)
         {
-            Destroy(currentGhost);
+            BuildingUIController.TogglePlacementUI(currentGhost, false, null, null);
+            if (destroyGhost) Destroy(currentGhost);
         }
 
         ClearIndicators();
@@ -185,27 +187,8 @@ public class BuildingPlacer : MonoBehaviour
         isRepositioning = false;
     }
 
-    public void AttachPlacementUI(GameObject building)
-    {
-        if (building.transform.Find("PlacementUI") != null) return;
-
-        if (placementUIPrefab == null)
-        {
-            Debug.LogError("[BuildingPlacer] Aucun prefab de PlacementUI assigné !");
-            return;
-        }
-
-        GameObject ui = Instantiate(placementUIPrefab, building.transform);
-        ui.name = "PlacementUI";
-        ui.transform.localPosition = new Vector3(0, -1f, 0);
-        ui.SetActive(false);
-    }
-    #endregion
-
-    #region Visuals
     public void SetGhostVisual(GameObject ghost, bool ghostMode)
     {
-        // Correction du bug : on récupère l'instance si elle est manquante
         if (ghostMode && currentBuildingInstance == null)
         {
             currentBuildingInstance = ghost.GetComponent<BuildingInstance>();
@@ -224,40 +207,9 @@ public class BuildingPlacer : MonoBehaviour
         ghost.GetComponent<DragToGrid>().enabled = ghostMode;
         ghost.GetComponent<BuildingLongPress>().enabled = !ghostMode;
 
-        // Activation / désactivation de l'UI
-        Transform panel = ghost.transform.Find("PlacementUI");
-        if (panel != null)
-        {
-            panel.gameObject.SetActive(ghostMode);
-
-            if (ghostMode)
-            {
-                var validateBtn = panel.Find("WorldSpace/PlacementButtons/ValidateButton")?.GetComponent<Button>();
-                var cancelBtn = panel.Find("WorldSpace/PlacementButtons/CancelButton")?.GetComponent<Button>();
-
-                if (validateBtn != null)
-                {
-                    validateBtn.onClick.RemoveAllListeners();
-                    validateBtn.onClick.AddListener(ValidatePlacement);
-                }
-
-                if (cancelBtn != null)
-                {
-                    cancelBtn.onClick.RemoveAllListeners();
-                    cancelBtn.onClick.AddListener(CancelPlacement);
-                }
-
-                Debug.Log("[SetGhostVisual] Listeners assignés aux boutons.");
-            }
-        }
-        else
-        {
-            Debug.LogWarning("[SetGhostVisual] Aucun PlacementUI trouvé sur le ghost.");
-        }
+        BuildingUIController.TogglePlacementUI(ghost, ghostMode, ValidatePlacement, CancelPlacement);
     }
-    #endregion
 
-    #region Indicators
     private void GeneratePlacementIndicators(Vector3Int centerCell)
     {
         ClearIndicators();
@@ -295,30 +247,17 @@ public class BuildingPlacer : MonoBehaviour
         foreach (var indicator in currentIndicators)
         {
             if (indicator != null)
-            {
                 Destroy(indicator);
-            }
         }
         currentIndicators.Clear();
     }
-    #endregion
 
-    #region Cells Management
     private bool IsCellValid(Vector3Int cell)
     {
-        if (occupiedCells.Contains(cell))
-            return false;
-
-        if (!floor.HasTile(cell))
-            return false;
-
-        Vector3Int aboveCell = new Vector3Int(cell.x, cell.y, cell.z + 1);
-        if (floor.HasTile(aboveCell))
-            return false;
-
-        if (noBuilds.HasTile(aboveCell))
-            return false;
-
+        if (occupiedCells.Contains(cell)) return false;
+        if (!floor.HasTile(cell)) return false;
+        if (floor.HasTile(new Vector3Int(cell.x, cell.y, cell.z + 1))) return false;
+        if (noBuilds.HasTile(new Vector3Int(cell.x, cell.y, cell.z + 1))) return false;
         return true;
     }
 
@@ -333,62 +272,6 @@ public class BuildingPlacer : MonoBehaviour
             }
         }
     }
-    #endregion
-
-    #region Placement Mode
-    public void EnterPlacementModeFor(GameObject building)
-    {
-        if (isPlacing && currentGhost != null && currentGhost != building)
-        {
-            CancelPlacement();
-        }
-
-        currentGhost = building;
-        currentBuildingInstance = building.GetComponent<BuildingInstance>();
-        if (currentBuildingInstance == null)
-        {
-            Debug.LogError("[BuildingPlacer] EnterPlacementModeFor appelé sur un GameObject sans BuildingInstance !");
-            return;
-        }
-
-        isPlacing = true;
-        isRepositioning = true;
-
-        // Libère les anciennes cellules pour repositionner
-        initialCellPosition = currentBuildingInstance.cellPosition;
-        UnregisterBuildingCells(currentBuildingInstance.cellPosition, currentBuildingInstance.size);
-
-        Vector3Int centerCell = floor.WorldToCell(building.transform.position);
-        GeneratePlacementIndicators(centerCell);
-
-        // Activation de l'UI déjà attachée
-        Transform panel = building.transform.Find("PlacementUI");
-        if (panel != null)
-        {
-            panel.gameObject.SetActive(true);
-
-            var validateBtn = panel.Find("WorldSpace/PlacementButtons/ValidateButton")?.GetComponent<Button>();
-            var cancelBtn = panel.Find("WorldSpace/PlacementButtons/CancelButton")?.GetComponent<Button>();
-
-            if (validateBtn != null)
-            {
-                validateBtn.onClick.RemoveAllListeners();
-                validateBtn.onClick.AddListener(ValidatePlacement);
-            }
-
-            if (cancelBtn != null)
-            {
-                cancelBtn.onClick.RemoveAllListeners();
-                cancelBtn.onClick.AddListener(CancelPlacement);
-            }
-
-            Debug.Log("[EnterPlacementModeFor] Listeners assignés aux boutons.");
-        }
-        else
-        {
-            Debug.LogWarning($"[BuildingPlacer] Le bâtiment {building.name} n'a pas de PlacementUI attaché.");
-        }
-    }
 
     public void UnregisterBuildingCells(Vector3Int originCell, Vector2Int size)
     {
@@ -401,13 +284,35 @@ public class BuildingPlacer : MonoBehaviour
             }
         }
     }
-    #endregion
 
-    #region Save
     private void SaveCurrentBuildings()
     {
         GameObject[] placedBuildings = GameObject.FindGameObjectsWithTag("Building");
         SavedController.Save(new List<GameObject>(placedBuildings), floor);
     }
-    #endregion
+
+    public void EnterPlacementModeFor(GameObject building)
+    {
+        if (isPlacing && currentGhost != null && currentGhost != building)
+            CancelPlacement();
+
+        currentGhost = building;
+        currentBuildingInstance = building.GetComponent<BuildingInstance>();
+        if (currentBuildingInstance == null)
+        {
+            Debug.LogError("[BuildingPlacer] EnterPlacementModeFor appelé sans BuildingInstance !");
+            return;
+        }
+
+        isPlacing = true;
+        isRepositioning = true;
+
+        initialCellPosition = currentBuildingInstance.cellPosition;
+        UnregisterBuildingCells(currentBuildingInstance.cellPosition, currentBuildingInstance.size);
+
+        Vector3Int centerCell = floor.WorldToCell(building.transform.position);
+        GeneratePlacementIndicators(centerCell);
+
+        BuildingUIController.TogglePlacementUI(building, true, ValidatePlacement, CancelPlacement);
+    }
 }
