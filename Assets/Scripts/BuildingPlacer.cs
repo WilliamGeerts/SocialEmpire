@@ -17,7 +17,6 @@ public class BuildingPlacer : MonoBehaviour
 
     [Header("UI Placement Auto")]
     [SerializeField] private GameObject placementUIPrefab;
-    private GameObject currentPlacementUI;
 
     [Header("Indicators")]
     public GameObject tileIndicator;
@@ -103,6 +102,7 @@ public class BuildingPlacer : MonoBehaviour
         Vector3 originCellWorldPos = floor.GetCellCenterWorld(originCell);
 
         currentGhost = Instantiate(prefab, originCellWorldPos, Quaternion.identity);
+        AttachPlacementUI(currentGhost);
         currentBuildingInstance = currentGhost.GetComponent<BuildingInstance>();
 
         SetGhostVisual(currentGhost, true);
@@ -112,6 +112,9 @@ public class BuildingPlacer : MonoBehaviour
 
     public void ValidatePlacement()
     {
+        
+    Debug.Log("[ValidatePlacement] Called");
+
         if (!isPlacing || currentGhost == null || currentBuildingInstance == null)
             return;
 
@@ -144,12 +147,6 @@ public class BuildingPlacer : MonoBehaviour
     {
         if (!isPlacing) return;
 
-        if (currentPlacementUI != null)
-        {
-            Destroy(currentPlacementUI);
-            currentPlacementUI = null;
-        }
-
         if (isRepositioning)
         {
             // Replacer le bâtiment à sa position initiale
@@ -176,12 +173,6 @@ public class BuildingPlacer : MonoBehaviour
 
     private void EndPlacement(bool destroyGhost = true)
     {
-        if (currentPlacementUI != null)
-        {
-            Destroy(currentPlacementUI);
-            currentPlacementUI = null;
-        }
-
         if (destroyGhost && currentGhost != null)
         {
             Destroy(currentGhost);
@@ -192,6 +183,22 @@ public class BuildingPlacer : MonoBehaviour
         currentBuildingInstance = null;
         isPlacing = false;
         isRepositioning = false;
+    }
+
+    public void AttachPlacementUI(GameObject building)
+    {
+        if (building.transform.Find("PlacementUI") != null) return;
+
+        if (placementUIPrefab == null)
+        {
+            Debug.LogError("[BuildingPlacer] Aucun prefab de PlacementUI assigné !");
+            return;
+        }
+
+        GameObject ui = Instantiate(placementUIPrefab, building.transform);
+        ui.name = "PlacementUI";
+        ui.transform.localPosition = new Vector3(0, -1f, 0);
+        ui.SetActive(false);
     }
     #endregion
 
@@ -217,38 +224,35 @@ public class BuildingPlacer : MonoBehaviour
         ghost.GetComponent<DragToGrid>().enabled = ghostMode;
         ghost.GetComponent<BuildingLongPress>().enabled = !ghostMode;
 
-        // Instanciation de l’UI
-        if (ghostMode)
+        // Activation / désactivation de l'UI
+        Transform panel = ghost.transform.Find("PlacementUI");
+        if (panel != null)
         {
-            if (placementUIPrefab != null)
+            panel.gameObject.SetActive(ghostMode);
+
+            if (ghostMode)
             {
-                if (currentPlacementUI != null)
-                    Destroy(currentPlacementUI);
+                var validateBtn = panel.Find("WorldSpace/PlacementButtons/ValidateButton")?.GetComponent<Button>();
+                var cancelBtn = panel.Find("WorldSpace/PlacementButtons/CancelButton")?.GetComponent<Button>();
 
-                currentPlacementUI = Instantiate(placementUIPrefab);
-                var controller = currentPlacementUI.GetComponentInChildren<PlacementController>();
+                if (validateBtn != null)
+                {
+                    validateBtn.onClick.RemoveAllListeners();
+                    validateBtn.onClick.AddListener(ValidatePlacement);
+                }
 
-                if (controller != null && currentBuildingInstance != null)
+                if (cancelBtn != null)
                 {
-                    controller.Init(
-                        ghost.transform,
-                        currentBuildingInstance,
-                        onValidate: ValidatePlacement,
-                        onCancel: CancelPlacement
-                    );
+                    cancelBtn.onClick.RemoveAllListeners();
+                    cancelBtn.onClick.AddListener(CancelPlacement);
                 }
-                else
-                {
-                    Debug.LogError("[SetGhostVisual] Impossible d'initialiser PlacementController — controller ou currentBuildingInstance est null !");
-                }
+
+                Debug.Log("[SetGhostVisual] Listeners assignés aux boutons.");
             }
         }
         else
         {
-            if (currentPlacementUI != null)
-            {
-                Destroy(currentPlacementUI);
-            }
+            Debug.LogWarning("[SetGhostVisual] Aucun PlacementUI trouvé sur le ghost.");
         }
     }
     #endregion
@@ -350,33 +354,39 @@ public class BuildingPlacer : MonoBehaviour
         isPlacing = true;
         isRepositioning = true;
 
-        // Libère les anciennes cellules pour pouvoir repositionner le bâtiment
+        // Libère les anciennes cellules pour repositionner
         initialCellPosition = currentBuildingInstance.cellPosition;
         UnregisterBuildingCells(currentBuildingInstance.cellPosition, currentBuildingInstance.size);
 
         Vector3Int centerCell = floor.WorldToCell(building.transform.position);
         GeneratePlacementIndicators(centerCell);
 
-        // Affiche l'UI de placement
-        if (placementUIPrefab != null)
+        // Activation de l'UI déjà attachée
+        Transform panel = building.transform.Find("PlacementUI");
+        if (panel != null)
         {
-            if (currentPlacementUI != null) Destroy(currentPlacementUI);
+            panel.gameObject.SetActive(true);
 
-            currentPlacementUI = Instantiate(placementUIPrefab);
-            var placementController = currentPlacementUI.GetComponent<PlacementController>();
-            if (placementController != null)
+            var validateBtn = panel.Find("WorldSpace/PlacementButtons/ValidateButton")?.GetComponent<Button>();
+            var cancelBtn = panel.Find("WorldSpace/PlacementButtons/CancelButton")?.GetComponent<Button>();
+
+            if (validateBtn != null)
             {
-                placementController.Init(
-                    building.transform,
-                    currentBuildingInstance,
-                    onValidate: ValidatePlacement,
-                    onCancel: CancelPlacement
-                );
+                validateBtn.onClick.RemoveAllListeners();
+                validateBtn.onClick.AddListener(ValidatePlacement);
             }
-            else
+
+            if (cancelBtn != null)
             {
-                Debug.LogError("[BuildingPlacer] Le prefab UI ne contient pas de PlacementController !");
+                cancelBtn.onClick.RemoveAllListeners();
+                cancelBtn.onClick.AddListener(CancelPlacement);
             }
+
+            Debug.Log("[EnterPlacementModeFor] Listeners assignés aux boutons.");
+        }
+        else
+        {
+            Debug.LogWarning($"[BuildingPlacer] Le bâtiment {building.name} n'a pas de PlacementUI attaché.");
         }
     }
 

@@ -93,6 +93,7 @@ public class GameController : MonoBehaviour
                     }
                 }
 
+                buildingPlacer.AttachPlacementUI(building); // <-- AJOUT ICI
                 buildingPlacer.RegisterBuildingCells(placed.cellPosition, instance.size);
             }
             else
@@ -132,7 +133,7 @@ public class GameController : MonoBehaviour
         int totalProduced = cycles * instance.production.amountPerCycle;
 
         int finalAmount = Mathf.Min(totalProduced, instance.production.storageCapacity);
-        Debug.Log($"[CalculateProducedAmount] {instance.buildingName} : {elapsed.TotalSeconds:F1}s écoulées, {cycles} cycles -> {finalAmount}/{instance.production.storageCapacity} produits.");
+        // Debug.Log($"[CalculateProducedAmount] {instance.buildingName} : {elapsed.TotalSeconds:F1}s écoulées, {cycles} cycles -> {finalAmount}/{instance.production.storageCapacity} produits.");
 
         return finalAmount;
     }
